@@ -1,6 +1,7 @@
 from pylovepdf.ilovepdf import ILovePdf
 from pylovepdf.file import File
 import re
+import os
 
 
 class Task(ILovePdf):
@@ -209,10 +210,11 @@ class Task(ILovePdf):
             filename = self.clean_filename(re.search(r'(filename=\")(.+\.\w+)(\")',
                                                      str(response.headers['content-disposition'])).group(2))
 
-            with open(self.download_path + '\\' + filename, 'wb') as f:
+            with open(os.path.join(self.download_path, filename), 'wb') as f:
                 for chunk in response.iter_content(10):
                     f.write(chunk)
 
+            self.downloaded_filename = filename
             print('File downloaded!')
 
             return True
